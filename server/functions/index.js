@@ -1,8 +1,20 @@
+require('dotenv').config()
+const express = require('express');
 const functions = require('firebase-functions');
+const cors = require('cors')({origin: true});
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+const botRouter = require('./routes/bot');
+
+const app = express();
+
+// parse application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }))
+// parse application/json
+app.use(express.json())
+// use cors
+app.use(cors);
+
+app.use('/bot', botRouter)
+
+
+exports.api = functions.https.onRequest(app);
