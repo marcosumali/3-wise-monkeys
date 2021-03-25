@@ -12,7 +12,9 @@
     // So we must revalue using mannual invocation
     name = input.value;
     if (name.length > 0) {
+      // Save name
       localStorage.setItem('name', name);
+      // Navigate to quiz
       navigate("/quiz");
     }
   }

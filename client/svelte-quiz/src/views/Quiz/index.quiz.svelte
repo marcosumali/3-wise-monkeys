@@ -1,27 +1,24 @@
 <script>
   import { onMount } from 'svelte';
-
+  
   import Card from './components/card.svelte';
   
   let quizes = [];
   let isLoading = false;
-  let index = 0;
-  const cardDetails = {
-    index, 
-    quizes,
-  }
+  const cardDetails = {quizes};
   const quizURL = `https://opentdb.com/api.php?amount=3&category=17&difficulty=easy&type=boolean`;
   
   const getQuizes = () => {
     isLoading = true;
     setTimeout(async () => {
       const res = await fetch(quizURL).then(res => res.json())
+      // Update variables
       quizes = await res.results
       cardDetails.quizes = quizes
       if (quizes.length > 0) {
         isLoading = false
       }
-    }, 3000)
+    }, 2000)
   }
 
   onMount(() => getQuizes())
