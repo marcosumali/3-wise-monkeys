@@ -28,7 +28,7 @@
       </wired-card>
     </div>
     <div class="container-wrap-center" style="margin-bottom: 16px">
-      <div class="container-wrap-center">
+      <div class="container-wrap-center" style="width: 100%">
         <wired-input type="text" placeholder="Your Name" class="name" bind:this={input}/>
         <wired-button class="button" on:click={saveName}>START</wired-button>
       </div>

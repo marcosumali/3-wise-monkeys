@@ -2122,7 +2122,7 @@ var app = (function () {
     			div = element("div");
     			div.textContent = "My apologies, but your name can't be empty...";
     			attr_dev(div, "class", "error-text svelte-1avq1b3");
-    			add_location(div, file$5, 35, 8, 1083);
+    			add_location(div, file$5, 35, 8, 1103);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2199,10 +2199,11 @@ var app = (function () {
     			set_custom_element_data(wired_input, "type", "text");
     			set_custom_element_data(wired_input, "placeholder", "Your Name");
     			set_custom_element_data(wired_input, "class", "name svelte-1avq1b3");
-    			add_location(wired_input, file$5, 31, 8, 857);
+    			add_location(wired_input, file$5, 31, 8, 877);
     			set_custom_element_data(wired_button, "class", "button");
-    			add_location(wired_button, file$5, 32, 8, 947);
+    			add_location(wired_button, file$5, 32, 8, 967);
     			attr_dev(div1, "class", "container-wrap-center svelte-1avq1b3");
+    			set_style(div1, "width", "100%");
     			add_location(div1, file$5, 30, 6, 813);
     			attr_dev(div2, "class", "container-wrap-center svelte-1avq1b3");
     			set_style(div2, "margin-bottom", "16px");
@@ -2210,10 +2211,10 @@ var app = (function () {
     			set_style(div3, "margin-bottom", "4px");
     			set_style(div3, "width", "100%");
     			set_style(div3, "text-align", "center");
-    			add_location(div3, file$5, 39, 6, 1233);
-    			add_location(div4, file$5, 40, 6, 1332);
+    			add_location(div3, file$5, 39, 6, 1253);
+    			add_location(div4, file$5, 40, 6, 1352);
     			attr_dev(div5, "class", "container-wrap-center text svelte-1avq1b3");
-    			add_location(div5, file$5, 38, 4, 1186);
+    			add_location(div5, file$5, 38, 4, 1206);
     			attr_dev(div6, "class", "container svelte-1avq1b3");
     			add_location(div6, file$5, 23, 2, 559);
     			attr_dev(div7, "class", "page svelte-1avq1b3");
