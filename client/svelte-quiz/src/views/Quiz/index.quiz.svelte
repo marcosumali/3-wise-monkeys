@@ -18,7 +18,7 @@
       if (quizes.length > 0) {
         isLoading = false
       }
-    }, 2000)
+    }, 1000)
   }
 
   onMount(() => getQuizes())
