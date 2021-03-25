@@ -1,10 +1,20 @@
 <script>
-  import "wired-elements";
+  import { navigate } from "svelte-routing";
+
 	let input;
+  let hasSubmitted = false;
+  let name = input ? input.value : '';
 
   const saveName = () => {
-    const name = input.value
-    localStorage.setItem('name', name)
+    hasSubmitted = true;
+    // Input must be paired with variables using bind:value
+    // Since we're using Wired.JS, we can't do this atm
+    // So we must revalue using mannual invocation
+    name = input.value;
+    if (name.length > 0) {
+      localStorage.setItem('name', name);
+      navigate("/quiz");
+    }
   }
 </script>
 
@@ -15,9 +25,14 @@
         <h1>Three Wise Monkeys</h1>
       </wired-card>
     </div>
-    <div class="container-nowrap-center" style="margin-bottom: 16px">
-      <wired-input type="text" placeholder="Your Name" class="name" bind:this={input}/>
-      <wired-button class="button" on:click={saveName}>START</wired-button>
+    <div class="container-wrap-center" style="margin-bottom: 16px">
+      <div class="container-wrap-center">
+        <wired-input type="text" placeholder="Your Name" class="name" bind:this={input}/>
+        <wired-button class="button" on:click={saveName}>START</wired-button>
+      </div>
+      {#if hasSubmitted && name.length <= 0}
+        <div class="error-text">My apologies, but your name can't be empty...</div>
+      {/if}
     </div>
     <div class="container-wrap-center text">
       <div style="margin-bottom: 4px; width: 100%; text-align: center;">Dear Young Traveler,</div>
@@ -61,6 +76,13 @@
     justify-content: center;
     align-items: center;
   }
+  .error-text {
+    text-align: center;
+    font-size: 12px;
+    margin-top: 4px;
+    color: darkred;
+  }
+
 
 	@media (max-width: 640px) {
 		.container {

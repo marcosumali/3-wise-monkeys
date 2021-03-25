@@ -1,9 +1,10 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
   import Home from "./views/Home/index.home.svelte";
-  import Quiz from "./views/Quiz/index.svelte";
+  import Quiz from "./views/Quiz/index.quiz.svelte";
   import End from "./views/End/index.svelte";
   import NotFound from "./views/NotFound/index.svelte";
+  import "wired-elements";
 
   export let url = "";
 </script>
