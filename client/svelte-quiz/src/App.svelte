@@ -1,6 +1,6 @@
 <script>
   import { Router, Link, Route } from "svelte-routing";
-  import Home from "./views/Home/index.svelte";
+  import Home from "./views/Home/index.home.svelte";
   import Quiz from "./views/Quiz/index.svelte";
   import End from "./views/End/index.svelte";
   import NotFound from "./views/NotFound/index.svelte";
