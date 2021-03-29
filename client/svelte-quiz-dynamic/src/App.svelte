@@ -6,16 +6,20 @@
   import Quiz from "./views/Quiz/index.quiz.svelte";
   import End from "./views/End/index.svelte";
   import NotFound from "./views/NotFound/index.svelte";
-  import {navRoutes, index, quiz} from './store/index';
+  import {navRoutes, index, quiz, isLoading} from './store/index';
   import {HOME, QUIZ, END} from './constant/story';
 
   const callbacks = {
     onUpdate(data) {
-      console.log('data:', data)
       if (data.stages === QUIZ) {
         $navRoutes = QUIZ
         $index = data.index
         $quiz = data.quiz
+        $isLoading = false
+      }
+      if (data.stages === END) {
+        $navRoutes = END
+        $isLoading = false
       }
     },
   };

@@ -1,40 +1,39 @@
 <script>
-  import { onMount } from 'svelte';
+  // import { onMount } from 'svelte';
   
   import Card from './components/card.svelte';
+  import {isLoading} from '../../store/index';
   
-  let quizes = [];
-  let isLoading = false;
-  const cardDetails = {quizes};
-  const quizURL = `https://opentdb.com/api.php?amount=3&category=17&difficulty=easy&type=boolean`;
+  // let quizes = [];
+  // let isLoading = false;
+  // const cardDetails = {quizes};
+  // const quizURL = `https://opentdb.com/api.php?amount=3&category=17&difficulty=easy&type=boolean`;
   
-  const getQuizes = () => {
-    isLoading = true;
-    setTimeout(async () => {
-      const res = await fetch(quizURL).then(res => res.json())
-      // Update variables
-      quizes = await res.results
-      cardDetails.quizes = quizes
-      if (quizes.length > 0) {
-        isLoading = false
-      }
-    }, 1000)
-  }
+  // const getQuizes = () => {
+  //   isLoading = true;
+  //   setTimeout(async () => {
+  //     const res = await fetch(quizURL).then(res => res.json())
+  //     // Update variables
+  //     quizes = await res.results
+  //     cardDetails.quizes = quizes
+  //     if (quizes.length > 0) {
+  //       isLoading = false
+  //     }
+  //   }, 1000)
+  // }
 
-  onMount(() => getQuizes())
+  // onMount(() => getQuizes())
 </script>
 
 <div class="page">
   <div class="container">
-    {#if isLoading && quizes.length <= 0}
+    {#if isLoading}
       <div>
         <wired-spinner class="spinner" spinning={true} duration="1000"></wired-spinner>
         <div>Loading...</div>
       </div>
-    {:else if !isLoading && quizes.length > 0}
-      <Card {...cardDetails}/>
-    {:else if !isLoading && quizes.length <= 0}
-      <div style="text-align: center">ERROR !</div>
+    {:else}
+      <Card/>
     {/if}
   </div>
 </div>

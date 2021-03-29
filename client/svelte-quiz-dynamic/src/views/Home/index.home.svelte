@@ -1,6 +1,6 @@
 <script>
   import { navigate } from "svelte-routing";
-  import {navRoutes} from '../../store/index';
+  import {isLoading} from '../../store/index';
   import {QUIZ} from '../../constant/story';
 
 	let input;
@@ -16,8 +16,10 @@
     if (name.length > 0) {
       // Save name
       localStorage.setItem('name', name);
-      // Navigate to quiz
+      // Navigate to quiz: first quest
       interactiveCanvas.sendTextQuery('first quest');
+      // Set isLoading as true
+      $isLoading = true;
     }
   }
 </script>
