@@ -15,13 +15,12 @@
     index.update(n => n + 1)
     // Update IC response
     // Navigate to quiz: second quest
+    $isLoading = true;
     if ($index === 1) {
-      $isLoading = true;
       interactiveCanvas.sendTextQuery('second quest');
     }
     // Navigate to quiz: third quest
     if ($index === 2) {
-      $isLoading = true;
       interactiveCanvas.sendTextQuery('third quest');
     }
     // Navigate to end
