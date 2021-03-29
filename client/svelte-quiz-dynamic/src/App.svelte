@@ -41,7 +41,7 @@
 <div>
   {$navRoutes}
   {$index}
-  {$quiz}
+  {JSON.stringify($quiz)}
   {#if $navRoutes === HOME}
     <Home />
   {:else if $navRoutes === QUIZ}
