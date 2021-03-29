@@ -26,8 +26,9 @@
 </script>
 
 <div class="page">
+  {$isLoading}
   <div class="container">
-    {#if isLoading}
+    {#if $isLoading}
       <div>
         <wired-spinner class="spinner" spinning={true} duration="1000"></wired-spinner>
         <div>Loading...</div>
