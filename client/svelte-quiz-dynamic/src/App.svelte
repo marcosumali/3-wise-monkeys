@@ -27,9 +27,9 @@
 
 <div>
   {#if $navRoutes === HOME}
-    <Quiz />
-  {:else if $navRoutes === QUIZ}
     <Home />
+  {:else if $navRoutes === QUIZ}
+    <Quiz />
   {:else if $navRoutes === END}
     <End />
   {:else}
