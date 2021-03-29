@@ -6,12 +6,17 @@
   import Quiz from "./views/Quiz/index.quiz.svelte";
   import End from "./views/End/index.svelte";
   import NotFound from "./views/NotFound/index.svelte";
-  import {navRoutes} from './store/index';
+  import {navRoutes, index, quiz} from './store/index';
   import {HOME, QUIZ, END} from './constant/story';
 
   const callbacks = {
     onUpdate(data) {
       console.log('data:', data)
+      if (data.stages === QUIZ) {
+        $navRoutes = QUIZ
+        $index = data.index
+        $quiz = data.quiz
+      }
     },
   };
   interactiveCanvas.ready(callbacks);
@@ -35,6 +40,8 @@
 
 <div>
   {$navRoutes}
+  {$index}
+  {$quiz}
   {#if $navRoutes === HOME}
     <Home />
   {:else if $navRoutes === QUIZ}
