@@ -24,11 +24,11 @@
     align-items: center;
   }
   .container {
-    padding-top: 20vh;
+    padding-top: 25vh;
   }
   @media (max-width: 640px) {
     .container {
-			padding-top: 12.5vh;
+			padding-top: 10vh;
 		}
 	}
 </style>

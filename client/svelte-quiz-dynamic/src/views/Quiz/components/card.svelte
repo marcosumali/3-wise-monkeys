@@ -38,8 +38,7 @@
   </wired-card>
   <div class="container-nowrap-center">
     <wired-card elevation="3" class="wired body">
-      <!-- <h2>{$quiz.question}</h2> -->
-      <h2>An exothermic reaction is a chemical reaction that releases energy by radiating electricity.</h2>
+      <h2>{$quiz.question}</h2>
     </wired-card>
   </div>
   <div class="container-nowrap-center">
