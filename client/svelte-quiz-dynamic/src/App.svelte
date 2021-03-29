@@ -1,15 +1,25 @@
 <script>
-  import { Router, Link, Route } from "svelte-routing";
+  // import { Router, Link, Route } from "svelte-routing";
+  import "wired-elements";
+
   import Home from "./views/Home/index.home.svelte";
   import Quiz from "./views/Quiz/index.quiz.svelte";
   import End from "./views/End/index.svelte";
   import NotFound from "./views/NotFound/index.svelte";
-  import "wired-elements";
+  import {navRoutes} from './store/index';
+  import {HOME, QUIZ, END} from './constant/story';
 
-  export let url = "";
+  const callbacks = {
+    onUpdate(data) {
+      console.log('data:', data)
+    },
+  };
+  interactiveCanvas.ready(callbacks);
+
+  // export let url = "";
 </script>
 
-<Router url={url}>
+<!-- <Router url={url}>
   <nav>
     <Link to="/">Home</Link>
     <Link to="/quiz">Quiz</Link>
@@ -21,4 +31,18 @@
     <Route path="/end" component={End} />
     <Route path="*" component={NotFound} />
   </div>
-</Router>
+</Router> -->
+
+<div>
+  {$navRoutes}
+  {#if $navRoutes === HOME}
+    <Home />
+  {:else if $navRoutes === QUIZ}
+    <Quiz />
+  {:else if $navRoutes === END}
+    <End />
+    {:else}
+    <NotFound />
+  {/if}
+</div>
+

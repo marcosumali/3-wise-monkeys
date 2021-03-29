@@ -1,5 +1,7 @@
 <script>
   import { navigate } from "svelte-routing";
+  import {navRoutes} from '../../store/index';
+  import {QUIZ} from '../../constant/story';
 
 	let input;
   let hasSubmitted = false;
@@ -15,7 +17,7 @@
       // Save name
       localStorage.setItem('name', name);
       // Navigate to quiz
-      navigate("/quiz");
+      // $navRoutes = QUIZ
     }
   }
 </script>
