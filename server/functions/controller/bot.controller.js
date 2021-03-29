@@ -1,23 +1,38 @@
 const {WebhookClient, Card, Suggestion } = require('dialogflow-fulfillment');
 const {HtmlResponse} = require('actions-on-google');
+const fetch = require('node-fetch');
 
-const {taleOf3WiseMonkeys} = require('../constant/story');
+const {
+  taleOf3WiseMonkeys,
+  students,
+  disabilities,
+  QUIZ,
+  END,
+} = require('../constant/story');
+
 
 const dialogflowWebhook = (req, res, next) => {
   const agent = new WebhookClient({request: req, response: res});
+  
   // Get actions on google library conv instance
-  const hasConversation = (agent) => agent.conv();
+  const agentConversation = (agent) => agent.conv();
+
+  // Defining conversation
+  const conv = agentConversation(agent)
+
   // To check whether actions has interactive canvas capabilities
   const hasInteractiveCanvas = (conv) =>  conv.surface.capabilities.has('actions.capability.INTERACTIVE_CANVAS');
+
   // To divide conversation between dialogflow bot and google assistant
   const divideTasks = (agent, botMessages, assistantMessages) => {
-    const conv = hasConversation(agent)
+    // Google assistant conversation
     if (conv) {
       const hasIC = hasInteractiveCanvas(conv)
       if (hasIC) assistantMessages.map(message => conv.ask(message));
       if (!hasIC) conv.ask(`I'm sorry but your devices doesn't have interactive canvas capability.`);
       return agent.add(conv)
     }
+    // Bot conversation
     if (!conv) return botMessages.map(message => agent.add(message));
   }
 
@@ -39,7 +54,7 @@ const dialogflowWebhook = (req, res, next) => {
   function googleAssistantHandler(agent) {
     const botTasks = ['hello from my store. 123', 'test not 123'];
     const assistantTasks = ['hai, how are you? 123', 'I am good. 123', new HtmlResponse({url: 'https://3-wise-monkeys.vercel.app/'})];
-    divideTasks(agent, botTasks, assistantTasks);
+      divideTasks(agent, botTasks, assistantTasks);
   }
 
   const defaultWelcome = (agent) => {
@@ -48,7 +63,7 @@ const dialogflowWebhook = (req, res, next) => {
       `You can ask me anything including the secret of this Ryokan.`,
     ];
     const assistantMessages = [
-      `Greetings, young traveler! Welcome to our Ryokan. My name is Benkei and I'll be your host for your stay. Please stay as long you pay hehe.`,
+      `Greetings, young traveler! Welcome to our Ryokan. My name is Benkei and I'll be your host for your stay. Please stay as long you pay hehehe.`,
       `You can ask me anything including the secret of this Ryokan.`,
     ];
     divideTasks(agent, botMessages, assistantMessages);
@@ -107,9 +122,40 @@ const dialogflowWebhook = (req, res, next) => {
     const assistantMessages = [
       `"Thank you.", said the first monkey.`,
       `POOF !`,
-      new HtmlResponse({url: 'https://3-wise-monkeys.vercel.app/'}),
+      new HtmlResponse({url: 'https://3-wise-monkeys-canvas.vercel.app'}),
     ];
     divideTasks(agent, botMessages, assistantMessages);
+  }
+
+  // After this section, conversation only happens with google assistant  
+  const sendQuest = async (agent, index) => {
+    let greetings = `I'm ${students[index]} and I ${disabilities[index]} no evil. Please help me with the question.`;
+    console.log('quest:', index, greetings)
+    const hasIC = hasInteractiveCanvas(conv)
+    conv.ask(greetings);
+    if (hasIC) {
+      const quizURL = `https://opentdb.com/api.php?amount=1&category=27&difficulty=easy&type=boolean`;
+      const res = await fetch(quizURL).then(res => res.json())
+      const quiz = res.results[0]
+      console.log('quiz:', JSON.stringify(quiz))
+      conv.ask(new HtmlResponse({data: {stages: QUIZ, index, quiz}}))
+    }
+    agent.add(conv);
+  }
+
+  const firstQuest = (agent) => sendQuest(agent, 0);
+
+  const secondQuest = (agent) => sendQuest(agent, 1);
+  
+  const thirdQuest = (agent) => sendQuest(agent, 2);
+
+  const finishQuest = (agent) => {
+    const hasIC = hasInteractiveCanvas(conv)
+    conv.ask('Thank you for helping us.')
+    if (hasIC) {
+      conv.ask(new HtmlResponse({data: {stages: END}}))
+    }
+    agent.add(conv);
   }
 
   let intentMap = new Map();
@@ -119,6 +165,10 @@ const dialogflowWebhook = (req, res, next) => {
   intentMap.set('S1-3A Ask To Go - Yes', goToShrine);
   intentMap.set('S1-4A Ask To Pray - Yes', finishedPraying);
   intentMap.set('S1-5A Ask To Help - Yes', goHelp);
+  intentMap.set('S1-6 First Quest', firstQuest);
+  intentMap.set('S1-7 Second Quest', secondQuest);
+  intentMap.set('S1-8 Third Quest', thirdQuest);
+  intentMap.set('S1-9 Finish Quest', finishQuest);
   intentMap.set('test1', yourFunctionHandler);
   intentMap.set('test2', googleAssistantHandler);
   agent.handleRequest(intentMap);

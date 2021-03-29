@@ -1,32 +1,9 @@
-<script>
-  // import { onMount } from 'svelte';
-  
+<script>  
   import Card from './components/card.svelte';
   import {isLoading} from '../../store/index';
-  
-  // let quizes = [];
-  // let isLoading = false;
-  // const cardDetails = {quizes};
-  // const quizURL = `https://opentdb.com/api.php?amount=3&category=17&difficulty=easy&type=boolean`;
-  
-  // const getQuizes = () => {
-  //   isLoading = true;
-  //   setTimeout(async () => {
-  //     const res = await fetch(quizURL).then(res => res.json())
-  //     // Update variables
-  //     quizes = await res.results
-  //     cardDetails.quizes = quizes
-  //     if (quizes.length > 0) {
-  //       isLoading = false
-  //     }
-  //   }, 1000)
-  // }
-
-  // onMount(() => getQuizes())
 </script>
 
 <div class="page">
-  {$isLoading}
   <div class="container">
     {#if $isLoading}
       <div>

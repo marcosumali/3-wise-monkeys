@@ -1,5 +1,9 @@
 <script>
- import {answers} from '../../store/index';
+  import { onMount } from 'svelte';
+
+  import {answers} from '../../store/index';
+
+  onMount(() => localStorage.removeItem('name'));
 </script>
 
 <div class="page">

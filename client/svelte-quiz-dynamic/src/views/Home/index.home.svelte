@@ -1,7 +1,5 @@
 <script>
-  import { navigate } from "svelte-routing";
   import {isLoading} from '../../store/index';
-  import {QUIZ} from '../../constant/story';
 
 	let input;
   let hasSubmitted = false;

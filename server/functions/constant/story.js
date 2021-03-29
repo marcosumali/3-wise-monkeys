@@ -50,7 +50,19 @@ const taleOf3WiseMonkeys = [
   `[Would you go to the Tosho-gu Shrine ?]`,
 ];
 
+const students = ['Mizaru', 'Kikazaru', 'Iwazaru'];
+
+const disabilities = ['see', 'hear', 'speak'];
+
+const HOME = 'home';
+const QUIZ = 'quiz';
+const END = 'end';
 
 module.exports = {
   taleOf3WiseMonkeys,
+  students,
+  disabilities,
+  HOME,
+  QUIZ, 
+  END,
 }
