@@ -17,7 +17,7 @@
       // Save name
       localStorage.setItem('name', name);
       // Navigate to quiz
-      // $navRoutes = QUIZ
+      interactiveCanvas.sendTextQuery('first quest');
     }
   }
 </script>
