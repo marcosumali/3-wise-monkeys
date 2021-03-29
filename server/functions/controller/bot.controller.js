@@ -1,13 +1,26 @@
-const {WebhookClient, Card, Suggestion} = require('dialogflow-fulfillment');
+const {WebhookClient, Card, Suggestion } = require('dialogflow-fulfillment');
+const {HtmlResponse} = require('actions-on-google');
 
 const {taleOf3WiseMonkeys} = require('../constant/story');
 
 const dialogflowWebhook = (req, res, next) => {
   const agent = new WebhookClient({request: req, response: res});
+  // Get actions on google library conv instance
+  const hasConversation = (agent) => agent.conv();
+  // To check whether actions has interactive canvas capabilities
+  const hasInteractiveCanvas = (conv) =>  conv.surface.capabilities.has('actions.capability.INTERACTIVE_CANVAS');
+  // To divide conversation between dialogflow bot and google assistant
+  const divideTasks = (agent, botMessages, assistantMessages) => {
+    const conv = hasConversation(agent)
+    if (conv) {
+      const hasIC = hasInteractiveCanvas(conv)
+      if (hasIC) assistantMessages.map(message => conv.ask(message));
+      if (!hasIC) conv.ask(`I'm sorry but your devices doesn't have interactive canvas capability.`);
+      return agent.add(conv)
+    }
+    if (!conv) return botMessages.map(message => agent.add(message));
+  }
 
-  // Uncomment and edit to make your own intent handler
-  // uncomment `intentMap.set('your intent name here', yourFunctionHandler);`
-  // below to get this function to be run when a Dialogflow intent is matched
   function yourFunctionHandler(agent) {
     agent.add(`This message is from Dialogflow's Cloud Functions for Firebase editor!`);
     agent.add(new Card({
@@ -23,45 +36,85 @@ const dialogflowWebhook = (req, res, next) => {
     agent.setContext({ name: 'weather', lifespan: 2, parameters: { city: 'Rome' }});
   }
 
-  // Uncomment and edit to make your own Google Assistant intent handler
-  // uncomment `intentMap.set('your intent name here', googleAssistantHandler);`
-  // below to get this function to be run when a Dialogflow intent is matched
   function googleAssistantHandler(agent) {
-    let conv = agent.conv(); // Get Actions on Google library conv instance
-    conv.ask('Hello from the Actions on Google client library!') // Use Actions on Google library
-    agent.add(conv); // Add Actions on Google library responses to your agent's response
+    const botTasks = ['hello from my store. 123', 'test not 123'];
+    const assistantTasks = ['hai, how are you? 123', 'I am good. 123', new HtmlResponse({url: 'https://3-wise-monkeys.vercel.app/'})];
+    divideTasks(agent, botTasks, assistantTasks);
   }
-  // See https://github.com/dialogflow/fulfillment-actions-library-nodejs
-  // for a complete Dialogflow fulfillment library Actions on Google client library v2 integration sample
+
+  const defaultWelcome = (agent) => {
+    const botMessages = [
+      `Greetings, young traveler! Welcome to our Ryokan. My name is Benkei and I'll be your host for your stay. Please stay as long you pay hehe 😉 💴 💴`,
+      `You can ask me anything including the secret of this Ryokan.`,
+    ];
+    const assistantMessages = [
+      `Greetings, young traveler! Welcome to our Ryokan. My name is Benkei and I'll be your host for your stay. Please stay as long you pay hehe.`,
+      `You can ask me anything including the secret of this Ryokan.`,
+    ];
+    divideTasks(agent, botMessages, assistantMessages);
+  }
+
+  const tellSecret = () => {
+    const botMessages = [
+      `HAHAHA I'm just kidding because we don't have any secrets, young traveler.`,
+      `But, I can tell you about a famous tale around here if you like hear them over a cup of warm tea 🍵`,
+    ];
+    const assistantMessages = [
+      `HAHAHA I'm just kidding because we don't have any secrets, young traveler.`,
+      `But, I can tell you about a famous tale around here if you like hear them over a cup of warm tea.`,
+    ];
+    divideTasks(agent, botMessages, assistantMessages);
+  }
 
   const tellTheTale = (agent) => {
-    taleOf3WiseMonkeys.map(story => agent.add(story))
-    agent.add(new Suggestion(`Yes`));
-    agent.add(new Suggestion(`No`));
+    const multiMessages = taleOf3WiseMonkeys.concat([new Suggestion(`No`), new Suggestion(`Yes`)]);
+    divideTasks(agent, multiMessages, multiMessages);
   }
   
   const goToShrine = (agent) => {
-    agent.add(`[You've arrived at Tosho-gu Shrine and noticed the Three Wise Monkeys carving inside the shrine.]`);
-    agent.add(`[Would you like to pray to help the Three Wise Monkeys?]`);
-    agent.add(new Suggestion(`Yes`));
-    agent.add(new Suggestion(`No`));
+    const botMessages = [
+      `[You've arrived at Tosho-gu Shrine and noticed the Three Wise Monkeys carving inside the shrine.]`,
+      `[Would you like to pray to help the Three Wise Monkeys?]`,
+    ];
+    const assistantMessages = [
+      `You've arrived at Tosho-gu Shrine and noticed the Three Wise Monkeys carving inside the shrine.`,
+      `Would you like to pray to help the Three Wise Monkeys?`,
+    ];
+    const suggestions = [new Suggestion(`No`), new Suggestion(`Yes`)]
+    divideTasks(agent, botMessages.concat(suggestions), assistantMessages.concat(suggestions));
   }
   
   const finishedPraying = (agent) => {
-    agent.add(`[When you've finished your pray, you noticed there's three monkey sitting in front of you.]`);
-    agent.add(`[You notice the first one close his eyes, the second one close his ear and the third one close his mouth. ]`);
-    agent.add(`[With doubt, you hear the first monkey say, "Would you mind share your wisdom to answer three of our questions?".]`);
-    agent.add(new Suggestion(`Yes`));
-    agent.add(new Suggestion(`No`));
+    const botMessages = [
+      `[When you've finished your pray, you noticed there's three monkey sitting in front of you.]`,
+      `[You notice the first one close his eyes, the second one close his ear and the third one close his mouth.]`,
+      `[With doubt, you hear the first monkey say, "Would you mind share your wisdom to answer three of our questions?".]`,
+    ];
+    const assistantMessages = [
+      `When you've finished your pray, you noticed there's three monkey sitting in front of you.`,
+      `You notice the first one close his eyes, the second one close his ear and the third one close his mouth.`,
+      `With doubt, you hear the first monkey say, "Would you mind share your wisdom to answer three of our questions?".`,
+    ];
+    const suggestions = [new Suggestion(`No`), new Suggestion(`Yes`)]
+    divideTasks(agent, botMessages.concat(suggestions), assistantMessages.concat(suggestions));
   }
   
   const goHelp = (agent) => {
-    agent.add(`["Thank you.", said the first monkey.]`);
-    agent.add(`["POOF !]`);
-    agent.add(`*** OPEN WEBSITE*`);
+    const botMessages = [
+      `["Thank you.", said the first monkey.]`,
+      `[POOF !]`,
+    ];
+    const assistantMessages = [
+      `"Thank you.", said the first monkey.`,
+      `POOF !`,
+      new HtmlResponse({url: 'https://3-wise-monkeys.vercel.app/'}),
+    ];
+    divideTasks(agent, botMessages, assistantMessages);
   }
 
   let intentMap = new Map();
+  intentMap.set('Default Welcome Intent', defaultWelcome);
+  intentMap.set('S1-1 Tell a secret', tellSecret);
   intentMap.set('S1-2 Tell the tale', tellTheTale);
   intentMap.set('S1-3A Ask To Go - Yes', goToShrine);
   intentMap.set('S1-4A Ask To Pray - Yes', finishedPraying);
